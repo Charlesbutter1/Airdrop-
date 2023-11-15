@@ -1,26 +1,15 @@
 import { ethers } from "hardhat";
 
+// npx hardhat --network hardhat run scripts/deploy.ts
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  // constructor(address[]  memory _tokenAddresses, bytes32[] memory _merkleRoots) {}
+  const contract = await ethers.deployContract("MerkleClaimERC20", [['0xB66540499d050fFA30e5a5D275bDA0E1176F1963'],['0x0e4e992209b71929756d05e2efdeb4eeeb330998c490f9a7568564bfdd5a5af5']]);
 
-  const lockedAmount = ethers.parseEther("0.001");
+  await contract.waitForDeployment();
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
-
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+  console.log(`Contract deployed to ${contract.target}`);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
