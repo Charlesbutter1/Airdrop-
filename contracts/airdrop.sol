@@ -82,4 +82,12 @@ contract MerkleClaimERC20 {
     // Send tokens back to owner
     token.transfer(owner, amount);
   }
+
+  function setRoot(address[]  memory _tokenAddresses, bytes32[] memory _merkleRoots) external {
+    require(msg.sender == owner);
+    require(_tokenAddresses.length == _merkleRoots.length , "Need as many merkle Roots as tokens");
+    for (uint8 i =0; i< _tokenAddresses.length; i++){
+      merkleRoots[_tokenAddresses[i]] = _merkleRoots[i]; // Update root
+    }
+  }
 }
